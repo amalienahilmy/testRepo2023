@@ -1,0 +1,35 @@
+<!-- home.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h3>Clients</h3>
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>Nationality</th>
+                <th>Passport Number</th>
+                <th>Mobile Number</th>
+                <th>Is Regular</th>
+                <th>Is Blacklisted</th>
+                <th>Actions</th> <!-- New column for icons -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in clients %}
+            <tr>
+                <td>{{ client.fullname }}</td>
+                <td>{{ client.nationality }}</td>
+                <td>{{ client.passportNo }}</td>
+                <td>{{ client.mobileNo }}</td>
+                <td>{{ client.isRegular }}</td>
+                <td>{{ client.isBlacklisted }}</td>
+                <td>
+                    <a href="" ><btn class="btn btn-primary">Edit</btn></a>
+                    <a href="" ><btn class="btn btn-danger">Delete</btn></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
