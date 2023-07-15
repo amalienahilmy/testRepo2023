@@ -5,8 +5,10 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect, JsonResponse
+from django.core import serializers
 
-from .forms import IncomeXactionForm, ExpenseXactionForm
+from .forms import IncomeXactionForm, ExpenseXactionForm, BookingForm
 
 
 # Create your views here.
@@ -35,12 +37,25 @@ def calendar (request):
 
 @login_required
 def booking (request):
-    return render(request, 'booking.html')
+    return render(request, 'booking.html', {})
 
 @login_required
 def client (request):
     clients = Client.objects.all()
     return render(request, 'client.html', {'clients': clients})
+
+def get_client(request):
+    search = request.GET.get('search')
+    payload = []
+
+    if search:
+        objs = Client.objects.filter(fullname__startswith=search)
+        payload = serializers.serialize('json', objs, fields=('fullname'))
+
+    return JsonResponse({
+        'status': True,
+        'payload': payload
+    }, safe=False)
 
 
 def finance(request):
@@ -52,7 +67,6 @@ def finance(request):
     if request.method == 'POST':
         print('We are in POST')
         if 'expense_submit' in request.POST:
-            print('we are in expense post')
             expense_form = ExpenseXactionForm(request.POST, prefix='expense')  # Add prefix to the expense form
             if expense_form.is_valid():
                 expense_form.save()  # Save the expense form data to the database
@@ -75,4 +89,20 @@ def logout_view(request):
     logout(request)
     return redirect(login_view)
 
+def add_booking(request):
 
+    submitted = False
+
+    if request.method == "POST":
+        submitted = False
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/add_booking?submitted=True')
+        
+    else:
+        form = BookingForm()  # Instantiate the BookingForm class
+        if 'submitted' in request.GET:
+            submitted = True
+
+    return render(request, 'add_booking.html', {'form': form, 'submitted': submitted})

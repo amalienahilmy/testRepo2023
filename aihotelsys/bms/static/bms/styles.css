@@ -126,3 +126,9 @@ height: 100%;
     margin-top: 7px;
 }
 
+label {
+    display: inline-block;
+    width: 200px;
+    text-align: left !important;
+    padding-right: 10px;
+}

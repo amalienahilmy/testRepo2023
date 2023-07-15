@@ -120,6 +120,9 @@ class PaymentMethod(BaseModel):
 
 
 class Booking(BaseModel):
+
+    cash_payment_method = PaymentMethod.objects.get(name="Cash")
+
     now = datetime.now()
     # Calculate tomorrow's datetime at 2 PM
     tomorrow_datetime = now + timedelta(days=1)
@@ -135,7 +138,7 @@ class Booking(BaseModel):
     amount_deposit = models.DecimalField(max_digits=8, decimal_places=2)
     total_room_price = models.DecimalField(max_digits=8, decimal_places=2)   # how to auto populate room price based on selected room?
     amount_paid = models.DecimalField(max_digits=8, decimal_places=2)  
-    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.DO_NOTHING)
+    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE, default=cash_payment_method.pk)
     amount_due = models.DecimalField(max_digits=8, decimal_places=2)
 
     print (now)
@@ -143,5 +146,5 @@ class Booking(BaseModel):
 
     
     def __str__(self):
-        return self.checkin_date 
+        return f"self.checkin_date"
     

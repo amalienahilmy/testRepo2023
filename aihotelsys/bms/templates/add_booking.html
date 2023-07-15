@@ -1,0 +1,22 @@
+<!-- addBooking.html -->
+{% extends 'base.html' %}
+{% block content %}
+    <center><h3>Add Booking</h3></center>
+
+    {% if submitted %}
+        Booking added successfully!
+
+    {% else %}
+        <form action="" method=POST class="booking-form">
+
+            {% csrf_token %}
+
+            {{ form.as_table }}
+
+            <br/><br/>
+
+            <input type="submit" value="Submit" class="btn btn-secondary">
+
+        </form>
+    {% endif %}
+{% endblock %}
